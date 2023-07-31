@@ -1,0 +1,22 @@
+@font-face {
+   font-display: swap;
+   font-family: 'Gilroy';
+   font-style: normal;
+   font-weight: 500;
+   src: url('./Gilroy-Medium.woff2');
+}
+* {
+   box-sizing: border-box !important;
+}
+*,
+body,
+input,
+select,
+button,
+textarea,
+select {
+   font-family: 'Gilroy', sans-serif !important;
+}
+body {
+   margin: 0;
+}
