@@ -1,6 +1,5 @@
 import Input from 'cleave.js/react';
 import { useState } from 'react';
-import { date, number, object, string } from 'yup';
 import { StyledElement } from './StyledElements';
 const Joi = () => {
    const [form, setForm] = useState({
@@ -24,43 +23,6 @@ const Joi = () => {
    const { age, bio, birthDate, email, name, url } = form;
    const onSubmit = e => {
       e.preventDefault();
-      const schema = object().shape({
-         name: string()
-            .typeError('Name must be string')
-            .required('Name is required')
-            .min(3, 'Name length must be greater than 3'),
-         age: number()
-            .typeError('Age must be number')
-            .required('Age is required')
-            .positive('Age must be positive number')
-            .integer('Age must be integer number')
-            .min(18, 'Age must be greater than 18')
-            .max(70, 'Age must be smaller than 70'),
-         birthDate: date().typeError('Birthday is invalid').required(),
-         email: string()
-            .typeError('Email must be string')
-            .required('Email is required')
-            .email('Email is invalid'),
-         bio: string()
-            .typeError('Bio must be string')
-            .optional()
-            .default(() => ''),
-         url: string()
-            .typeError('Website must be string')
-            .required('Website is required')
-            .url('Website is invalid'),
-      });
-      const newForm = { ...form, birthDate: new Date(birthDate) };
-      schema
-         .validate(newForm, { abortEarly: false, strict: false })
-         .then(() => {
-            console.log(form);
-         })
-         .catch(error => {
-            const inner = error?.inner;
-            const firstError = Array.isArray(inner) ? inner[0] : {};
-            setErrors({ ...errors, [firstError?.path]: firstError });
-         });
    };
    return (
       <StyledElement>
