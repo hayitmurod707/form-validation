@@ -3,16 +3,17 @@ export const StyledElement = styled.div`
    align-items: center;
    display: flex;
    flex-direction: column;
-   padding: 100px 0 0 0;
+   padding: 0 0 100px 0;
    width: 100%;
    & form {
       display: flex;
       flex-direction: column;
       width: 400px;
-      & h1 {
+      & h2 {
          font-size: 32px;
          font-weight: 600;
          margin: 0;
+         text-align: center;
       }
       & label {
          color: #6e7892;

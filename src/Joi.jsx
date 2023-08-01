@@ -27,7 +27,7 @@ const Joi = () => {
    return (
       <StyledElement>
          <form onSubmit={onSubmit}>
-            <h1>Joi validation</h1>
+            <h2>Joi</h2>
             <label>Name</label>
             <input
                type='text'

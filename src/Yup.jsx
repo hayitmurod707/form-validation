@@ -65,7 +65,7 @@ const Yup = () => {
    return (
       <StyledElement>
          <form onSubmit={onSubmit}>
-            <h1>Yup validation</h1>
+            <h2>Yup</h2>
             <label>Name</label>
             <input
                type='text'
