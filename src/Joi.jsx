@@ -1,4 +1,5 @@
 import Input from 'cleave.js/react';
+import Jo from 'joi';
 import { useState } from 'react';
 import { StyledElement } from './StyledElements';
 const Joi = () => {
@@ -8,7 +9,6 @@ const Joi = () => {
       birthDate: '',
       email: '',
       name: '',
-      sex: '',
       url: '',
    });
    const [errors, setErrors] = useState({});
@@ -23,6 +23,43 @@ const Joi = () => {
    const { age, bio, birthDate, email, name, url } = form;
    const onSubmit = e => {
       e.preventDefault();
+      const schema = Jo.object({
+         age: Jo.number().required().max(70).min(18).messages({
+            'number.base': 'Age must be number',
+            'number.empty': 'Age is required',
+            'number.min': 'Age must be greater than 18',
+            'number.max': 'Age must be smaller than 70',
+         }),
+         bio: Jo.string().empty('').messages({
+            'string.base': 'Bio must be string',
+         }),
+         birthDate: Jo.date().format('DD-MM-YYYY').messages({
+            'date.base': 'birthDate must be string',
+            'date.empty': 'birthDate is required',
+            'date.format': 'birthDate is invalid',
+         }),
+         // email: Jo.string().required().email().messages({
+         //    'string.base': 'Email must be string',
+         //    'string.empty': 'Email is required',
+         //    'string.email': 'Email is invalid',
+         // }),
+         // name: Jo.string().required().min(3).messages({
+         //    'string.base': 'Name must be string',
+         //    'string.empty': 'Name is required',
+         //    'string.min': 'Name length must be greater than 3',
+         // }),
+         // url: Jo.string().required().url().messages({
+         //    'string.base': 'Website must be string',
+         //    'string.empty': 'Website is required',
+         //    'string.url': 'Website is invalid',
+         // }),
+      });
+      console.log(new Date(birthDate || '').toISOString());
+      const validate = schema.validate(
+         { age, bio, birthDate },
+         { abortEarly: false }
+      );
+      console.log(validate);
    };
    return (
       <StyledElement>
@@ -60,7 +97,7 @@ const Joi = () => {
                value={birthDate}
                options={{
                   date: true,
-                  datePattern: ['Y', 'm', 'd'],
+                  datePattern: ['d', 'm', 'Y'],
                   delimiter: '.',
                }}
                onChange={e => {
