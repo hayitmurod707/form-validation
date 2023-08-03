@@ -6,9 +6,10 @@ const Yup = () => {
    const [form, setForm] = useState({
       age: '',
       bio: '',
-      birthDate: '',
+      birthday: '',
       email: '',
       name: '',
+      password: '',
       sex: '',
       url: '',
    });
@@ -16,41 +17,55 @@ const Yup = () => {
    const {
       age: ageError,
       bio: bioError,
-      birthDate: birthDateError,
+      birthday: birthdayError,
       email: emailError,
       name: nameError,
+      password: passwordError,
       url: urlError,
    } = errors;
-   const { age, bio, birthDate, email, name, url } = form;
+   const { age, bio, birthday, email, name, url, password } = form;
    const onSubmit = e => {
       e.preventDefault();
       const schema = object().shape({
          name: string()
-            .typeError('Name must be string')
-            .required('Name is required')
-            .min(3, 'Name length must be greater than 3'),
+            .typeError('name-string')
+            .required('name-required')
+            .min(3, 'name-greater'),
          age: number()
-            .typeError('Age must be number')
-            .required('Age is required')
-            .positive('Age must be positive number')
-            .integer('Age must be integer number')
-            .min(18, 'Age must be greater than 18')
-            .max(70, 'Age must be smaller than 70'),
-         birthDate: date().typeError('Birthday is invalid').required(),
+            .typeError('age-number')
+            .required('age-required')
+            .positive('age-positive')
+            .integer('age-integer')
+            .min(18, 'age-greater')
+            .max(70, 'age-smaller'),
+         birthday: date()
+            .typeError('birthday-invalid')
+            .required('birthday required'),
          email: string()
-            .typeError('Email must be string')
-            .required('Email is required')
-            .email('Email is invalid'),
+            .typeError('email-string')
+            .required('email-required')
+            .email('email-invalid'),
+         password: string()
+            .typeError('password-string')
+            .required('password-required')
+            .matches(/[0-9]/, 'password-number')
+            .matches(/[a-z]/, 'password-lowercase')
+            .matches(/[A-Z]/, 'password-uppercase')
+            .matches(
+               /[`!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/,
+               'password-special-characters'
+            )
+            .min(8, 'password-length'),
          bio: string()
-            .typeError('Bio must be string')
+            .typeError('bio-string')
             .optional()
             .default(() => ''),
          url: string()
-            .typeError('Website must be string')
-            .required('Website is required')
-            .url('Website is invalid'),
+            .typeError('website-string')
+            .required('website-required')
+            .url('website-invalid'),
       });
-      const newForm = { ...form, birthDate: new Date(birthDate) };
+      const newForm = { ...form, birthday: new Date(birthday) };
       schema
          .validate(newForm, { abortEarly: false, strict: false })
          .then(() => {
@@ -59,7 +74,9 @@ const Yup = () => {
          .catch(error => {
             const inner = error?.inner;
             const firstError = Array.isArray(inner) ? inner[0] : {};
-            setErrors({ ...errors, [firstError?.path]: firstError });
+            const path = firstError?.path;
+            const message = firstError?.message;
+            setErrors({ ...errors, [path]: message });
          });
    };
    return (
@@ -78,7 +95,7 @@ const Yup = () => {
                   setErrors({ ...errors, name: null });
                }}
             />
-            {nameError && <h6>{nameError?.message}</h6>}
+            {nameError && <h6>{nameError}</h6>}
             <label>Age</label>
             <input
                type='text'
@@ -91,25 +108,25 @@ const Yup = () => {
                   setErrors({ ...errors, age: null });
                }}
             />
-            {ageError && <h6>{ageError?.message}</h6>}
-            <label>BirthDate</label>
+            {ageError && <h6>{ageError}</h6>}
+            <label>Birthday</label>
             <Input
                type='text'
-               value={birthDate}
+               value={birthday}
                options={{
                   date: true,
                   datePattern: ['Y', 'm', 'd'],
                   delimiter: '.',
                }}
                onChange={e => {
-                  setForm({ ...form, birthDate: e.target.value });
-                  setErrors({ ...errors, birthDate: null });
+                  setForm({ ...form, birthday: e.target.value });
+                  setErrors({ ...errors, birthday: null });
                }}
                onFocus={() => {
-                  setErrors({ ...errors, birthDate: null });
+                  setErrors({ ...errors, birthday: null });
                }}
             />
-            {birthDateError && <h6>{birthDateError?.message}</h6>}
+            {birthdayError && <h6>{birthdayError}</h6>}
             <label>Email</label>
             <input
                type='text'
@@ -122,20 +139,20 @@ const Yup = () => {
                   setErrors({ ...errors, email: null });
                }}
             />
-            {emailError && <h6>{emailError?.message}</h6>}
-            <label>Website</label>
+            {emailError && <h6>{emailError}</h6>}
+            <label>Password</label>
             <input
                type='text'
-               value={url}
+               value={password}
                onChange={e => {
-                  setForm({ ...form, url: e.target.value });
-                  setErrors({ ...errors, url: null });
+                  setForm({ ...form, password: e.target.value });
+                  setErrors({ ...errors, password: null });
                }}
                onFocus={() => {
-                  setErrors({ ...errors, url: null });
+                  setErrors({ ...errors, password: null });
                }}
             />
-            {urlError && <h6>{urlError?.message}</h6>}
+            {passwordError && <h6>{passwordError}</h6>}
             <label>Bio</label>
             <input
                type='text'
@@ -148,7 +165,20 @@ const Yup = () => {
                   setErrors({ ...errors, bio: null });
                }}
             />
-            {bioError && <h6>{bioError?.message}</h6>}
+            {bioError && <h6>{bioError}</h6>}
+            <label>Website</label>
+            <input
+               type='text'
+               value={url}
+               onChange={e => {
+                  setForm({ ...form, url: e.target.value });
+                  setErrors({ ...errors, url: null });
+               }}
+               onFocus={() => {
+                  setErrors({ ...errors, url: null });
+               }}
+            />
+            {urlError && <h6>{urlError}</h6>}
             <button type='submit'>Send</button>
          </form>
       </StyledElement>
